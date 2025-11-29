@@ -1,9 +1,8 @@
-# RPi Dependencies
+# MQTT dependencies
 paho-mqtt
-# RPi.GPIO or gpiozero
+# GPIO dependencies
 gpiozero
-# picamera or rpicam-apps wrappers if needed, but often system installed.
-# PyGObject for GStreamer python bindings
+# GStreamer dependencies
 PyGObject
+# Other dependencies
 numpy
-

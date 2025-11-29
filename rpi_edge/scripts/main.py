@@ -5,7 +5,7 @@ from camera import VideoStreamer
 from gpio_handler import GPIOHandler
 
 # Configuration
-MQTT_BROKER = "192.168.1.100" # Replace with PC IP
+MQTT_BROKER = "broker.hivemq.com"
 MQTT_TOPIC = "/control/action"
 PC_HOST = "192.168.1.100" # Replace with PC IP
 PC_PORT = 5000
@@ -35,8 +35,8 @@ def main():
             
     except KeyboardInterrupt:
         print("Stopping services...")
-        camera.stop_stream()
         mqtt_sub.stop()
+        camera.stop_stream()
         gpio.cleanup()
         sys.exit(0)
 

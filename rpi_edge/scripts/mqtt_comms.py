@@ -1,8 +1,10 @@
-import paho.mqtt.client as mqtt
+import time
+from paho.mqtt import client
+import random
 
 class MQTTSubscriber:
     def __init__(self, broker_address, topic, callback):
-        self.client = mqtt.Client()
+        self.client = client.Client()
         self.broker_address = broker_address
         self.topic = topic
         self.callback = callback
@@ -27,4 +29,3 @@ class MQTTSubscriber:
     def stop(self):
         self.client.loop_stop()
         self.client.disconnect()
-

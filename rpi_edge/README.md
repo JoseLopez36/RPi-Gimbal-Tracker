@@ -8,7 +8,6 @@ This directory contains the code to run on the Raspberry Pi 4B.
 3. Stream video to PC.
 4. Listen for MQTT control signals.
 5. Execute hardware actions (GPIO).
-6. (Scenario B) Run local inference.
 
 ## Setup
 ### 1. **System Dependencies:**
@@ -19,8 +18,8 @@ This directory contains the code to run on the Raspberry Pi 4B.
 
 ### 2. Clone the Repository
    ```bash
-   git clone https://github.com/josloprui6/RPi-Edge-vs-Local.git
-   cd RPi-Edge-vs-Local
+   git clone https://github.com/JoseLopez36/RPi-Edge-vs-Local.git
+   cd RPi-Edge-vs-Local/rpi_edge
    ```
 
 ### 3. **Python Dependencies:**
@@ -28,6 +27,10 @@ This directory contains the code to run on the Raspberry Pi 4B.
    pip install -r requirements.txt
    ```
 
-### 4. **Hardware Config:**
-   - Ensure the Camera is enabled (`sudo raspi-config` -> Interface Options -> Camera).
-   - Ensure GPIO access permissions are set (usually default for `pi` user).
+## Run
+1. Make sure the PC Server is running first and you know its IP address.
+2. Edit `scripts/main.py` to set the correct `PC_HOST` IP address and `MQTT_BROKER` IP.
+3. Run the application:
+   ```bash
+   python3 scripts/main.py
+   ```

@@ -1,5 +1,3 @@
-# from gpiozero import LED # Example import
-
 class GPIOHandler:
     def __init__(self):
         # TODO: Initialize GPIO pins
