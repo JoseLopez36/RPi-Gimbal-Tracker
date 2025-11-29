@@ -1,0 +1,10 @@
+# PC Server Dependencies
+paho-mqtt
+# Deep Learning Framework (TBD, putting popular ones commented out or generic)
+# tensorflow
+# torch
+# torchvision
+PyGObject
+numpy
+opencv-python
+

@@ -1,0 +1,9 @@
+# RPi Dependencies
+paho-mqtt
+# RPi.GPIO or gpiozero
+gpiozero
+# picamera or rpicam-apps wrappers if needed, but often system installed.
+# PyGObject for GStreamer python bindings
+PyGObject
+numpy
+

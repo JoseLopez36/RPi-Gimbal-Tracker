@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+*.log
+.idea/
+.vscode/
+.cursor/
+results/scenario_a/*
+!results/scenario_a/.gitkeep
+results/scenario_b/*
+!results/scenario_b/.gitkeep
+models/*
+!models/.gitkeep
