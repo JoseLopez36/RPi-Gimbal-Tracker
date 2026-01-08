@@ -2,8 +2,6 @@
 Gimbal Control Module (SIYI A8 Mini)
 """
 
-from __future__ import annotations
-
 import socket
 import struct
 import time
@@ -12,7 +10,7 @@ from typing import Optional, Tuple
 
 STX = b"\x55\x66"
 
-# Default A8 Mini safety limits (degrees). Adjust if your gimbal is configured differently.
+# Default A8 Mini safety limits (degrees)
 DEFAULT_YAW_MIN, DEFAULT_YAW_MAX = -135.0, 135.0
 DEFAULT_PITCH_MIN, DEFAULT_PITCH_MAX = -90.0, 45.0
 

@@ -19,12 +19,11 @@ class YoloTracker:
         """
         self.model_path = model_path
         self.conf_threshold = conf_threshold
-        self.model = None
-        self.tracker = None
+        self._model = None
         print(f"Initializing YOLO Tracker (model: {model_path})")
-        self.load_model()
+        self._load_model()
     
-    def load_model(self):
+    def _load_model(self):
         """Load YOLO model"""
         try:
             # Resolve model path relative to project root
@@ -35,37 +34,37 @@ class YoloTracker:
             if not os.path.exists(model_full_path):
                 raise FileNotFoundError(f"Model file not found: {model_full_path}")
             
-            self.model = YOLO(model_full_path)
+            self._model = YOLO(model_full_path)
             print(f"YOLO model loaded successfully from {model_full_path}")
         except Exception as e:
             print(f"Error loading YOLO model: {e}")
             raise
     
-    def track(self, frame):
+    def track(self, source):
         """
         Detect humans and track them across frames
         
         Args:
-            frame: Input frame as numpy array (BGR format)
+            source: Input source (video file, stream url, etc.)
             
         Returns:
             List of tracked objects with bounding boxes and IDs
             Each object contains: id, bbox (x1, y1, x2, y2), confidence, class
         """
-        if self.model is None:
-            return []
+        if self._model is None:
+            raise ValueError("YOLO model not loaded")
         
         # Run YOLO detection with tracking
         # Class 0 in COCO dataset is 'person'
-        results = self.model.track(
-            frame,
+        results = self._model.track(
+            source,
             conf=self.conf_threshold,
-            classes=[0],  # Only detect humans (person class)
+            classes=[0],
             persist=True,
             verbose=False
         )
         
-        tracked_objects = []
+        target_list = []
         
         if results[0].boxes is not None and results[0].boxes.id is not None:
             boxes = results[0].boxes
@@ -75,35 +74,33 @@ class YoloTracker:
                 track_id = int(boxes.id[i].cpu().numpy())
                 confidence = float(boxes.conf[i].cpu().numpy())
                 
-                tracked_objects.append({
+                target_list.append({
                     'id': track_id,
                     'bbox': bbox,
                     'confidence': confidence,
                     'class': 'person'
                 })
         
-        return tracked_objects
+        return target_list
     
-    def get_primary_target(self, tracked_objects, frame_center=None):
+    def get_primary_target(self, target_list):
         """
         Select primary target to track (e.g., largest or closest to center)
         
         Args:
-            tracked_objects: List of tracked objects from detect_and_track
-            frame_center: Tuple (x, y) of frame center (optional)
+            target_list: List of tracked objects from track
             
         Returns:
             Primary target object or None
         """
-        if not tracked_objects:
+        if not target_list:
             return None
         
-        # Simple strategy: select largest bounding box (most prominent person)
-        # TODO: Could implement more sophisticated selection (closest to center, etc.)
+        # Simple strategy: select largest bounding box
         largest_area = 0
         primary_target = None
         
-        for obj in tracked_objects:
+        for obj in target_list:
             bbox = obj['bbox']
             area = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
             if area > largest_area:
@@ -122,7 +119,7 @@ class YoloTracker:
             frame_height: Frame height in pixels
             
         Returns:
-            Tuple (pan_offset, tilt_offset) in degrees
+            Tuple (pan, tilt) in degrees
             Positive pan = right, positive tilt = up
         """
         if target is None:

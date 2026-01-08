@@ -15,8 +15,11 @@ from video_streamer import VideoStreamer
 
 # Configuration
 GIMBAL_IP = "192.168.144.25"  # Replace with Siyi A8 Mini IP
-PC_HOST = "192.168.2.28"  # Replace with PC IP
+PC_HOST_IP = "192.168.2.28"  # Replace with PC IP
 PC_PORT = 5000
+SOURCE_URL = f"rtsp://{GIMBAL_IP}:554/stream1"
+SOURCE_WIDTH = 1920
+SOURCE_HEIGHT = 1080
 MODEL_PATH = "models/yolo11n.pt"  # Path to YOLO11n model (relative to project root)
 
 def main():
@@ -34,13 +37,26 @@ def main():
     streamer = VideoStreamer()
     
     try:
-        # TODO: Main logic
+        # 1. Track targets
+        target_list = tracker.track(SOURCE_URL)
+
+        # 2. Get current primary target
+        target = tracker.get_primary_target(target_list)
+
+        # 3. Calculate gimbal commands
+        pan, tilt = tracker.calculate_gimbal_command(target, SOURCE_WIDTH, SOURCE_HEIGHT)
+
+        # 4. Set gimbal commands
+        gimbal.set_pan_tilt(pan, tilt)
+
+        # 4. Stream annotated video
+        streamer.stream(???) # TODO: Add annotated video stream
 
         # Keep main thread alive
         print("System running. Press Ctrl+C to stop")
         while True:
             time.sleep(1)
-            
+
     except KeyboardInterrupt:
         print("\nStopping services...")
 
