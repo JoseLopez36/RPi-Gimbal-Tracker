@@ -7,7 +7,9 @@ http://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming
 """
 
 import io
-import picamera
+from picamera2 import Picamera2
+from picamera2.encoders import MJPEGEncoder
+from picamera2.outputs import FileOutput
 import logging
 import socketserver
 from threading import Condition
@@ -103,6 +105,7 @@ class Streamer(object):
         self.port = port
         
         self.camera = None
+        self.encoder = None
         self.output = None
         self.server = None
 
@@ -112,11 +115,18 @@ class Streamer(object):
             logging.warning("Streamer already started")
             return
         
-        resolution = f"{self.width}x{self.height}"
-        self.camera = picamera.PiCamera(resolution=resolution, framerate=self.framerate)
+        resolution = (self.width, self.height)
+        self.camera = Picamera2()
+        video_config = self.camera.create_video_configuration(main={"size": resolution})
+        self.camera.configure(video_config)
+        try:
+            self.camera.set_controls({"FrameRate": self.framerate})
+        except Exception:
+            logging.warning("Unable to set camera framerate; using default")
         
         self.output = StreamOutput()
-        self.camera.start_recording(self.output, format='mjpeg')
+        self.encoder = MJPEGEncoder()
+        self.camera.start_recording(self.encoder, FileOutput(self.output))
         
         # Create handler factory that passes output reference
         def handler_factory(*args, **kwargs):
@@ -132,7 +142,7 @@ class Streamer(object):
         self.server_thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         self.server_thread.start()
         
-        logging.info(f"Stream started: {resolution} @ {self.framerate}fps on port {self.port}")
+        logging.info(f"Stream started: {self.width}x{self.height} @ {self.framerate}fps on port {self.port}")
 
     def stop(self):
         """Stop the camera and streaming server"""
@@ -143,6 +153,7 @@ class Streamer(object):
         
         if self.camera is not None:
             self.camera.stop_recording()
+            self.encoder = None
             self.camera.close()
             self.camera = None
         

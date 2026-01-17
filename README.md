@@ -24,9 +24,10 @@ This project implements a smart surveillance system on a Raspberry Pi 4. It uses
   * [Product Page](https://www.raspberrypi.com/products/camera-module-v2/)
   * [Documentation](https://www.raspberrypi.com/documentation/accessories/camera.html)
 * **I/O:** Raspberry Pi Sense HAT.
+  * [Product Page](https://www.raspberrypi.com/products/sense-hat/)
+  * [Documentation](https://www.raspberrypi.com/documentation/accessories/sense-hat.html)
 * **Software Stack:**
 * Python 3.12+
-* GStreamer
 * Ultralytics (YOLO)
   * [YOLO on Raspberry Pi Guide](https://docs.ultralytics.com/guides/raspberry-pi/#flash-raspberry-pi-os-to-raspberry-pi)
 
@@ -56,23 +57,13 @@ cd RPi-Virtual-PTZ
 2. **Install system dependencies:**
 ```bash
 sudo apt update
-sudo apt install python3-opencv gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev sense-hat
+sudo apt install sense-hat
 ```
 
 3. **Install Python requirements:**
 ```bash
 pip install -r requirements.txt
 ```
-
-### Web Viewer Setup
-
-The video stream from the Raspberry Pi can be viewed through a web browser. Once the main application is running on the Raspberry Pi, access the stream at:
-
-```
-http://<RPi_IP_ADDRESS>:8000
-```
-
-For example: `http://192.168.1.112:8000`
 
 ## ⚙️ Configuration
 
@@ -85,7 +76,7 @@ The system uses `config/settings.json` for configuration. Edit this file to cust
 Run the main application on the Raspberry Pi:
 
 ```bash
-python3 source/rpi/main.py
+python3 source/main.py
 ```
 
 ### Web Viewer
