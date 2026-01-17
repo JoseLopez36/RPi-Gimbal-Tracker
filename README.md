@@ -63,7 +63,7 @@ sudo apt install python3-picamera2
 
 3. **Install Python requirements:**
 ```bash
-pip install ultralytics[export]
+pip install -r requirements.txt
 ```
 
 ## ⚙️ Configuration
