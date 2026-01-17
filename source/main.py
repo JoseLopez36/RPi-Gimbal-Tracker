@@ -1,14 +1,10 @@
 import json
 import sys
-import time
 from pathlib import Path
 
 from vision.streamer import Streamer
 from vision.tracker import Tracker
-# from vision.ptz import PTZPipeline
-# from hardware.display import VisualRadar
-# from hardware.buttons import JoystickController
-# from hardware import sensors
+from vision.virtual_ptz import VirtualPTZ
 
 def load_settings():
     root = Path(__file__).resolve().parents[1]
@@ -29,18 +25,16 @@ def main():
 
     streamer = None
     tracker = None
-    # radar = None
-    # joystick = None
-    # pipeline = None
+    virtual_ptz = None
 
     try:
         print("Initializing stream...")
-        stream_cfg = settings.get("stream", {})
+        streamer_cfg = settings.get("streamer", {})
         streamer = Streamer(
-            port=stream_cfg.get("port", 10001),
-            width=stream_cfg.get("width", 1920),
-            height=stream_cfg.get("height", 1080),
-            bitrate=stream_cfg.get("bitrate", 1000000)
+            port=streamer_cfg.get("port", 10001),
+            width=streamer_cfg.get("width", 1920),
+            height=streamer_cfg.get("height", 1080),
+            bitrate=streamer_cfg.get("bitrate", 1000000)
         )
         streamer.start()
 
@@ -53,30 +47,32 @@ def main():
         )
         results = tracker.start()
 
-        # sense_cfg = settings.get("sense_hat", {})
-        # radar = VisualRadar(enabled=sense_cfg.get("enabled", True))
-        # joystick = JoystickController(enabled=sense_cfg.get("enabled", True))
+        print("Initializing virtual PTZ...")
+        virtual_ptz_cfg = settings.get("virtual_ptz", {})
+        virtual_ptz = VirtualPTZ(
+            full_width=streamer_cfg.get("width", 1920),
+            full_height=streamer_cfg.get("height", 1080),
+            width=virtual_ptz_cfg.get("width", 640),
+            height=virtual_ptz_cfg.get("height", 360),
+            min_zoom=virtual_ptz_cfg.get("min_zoom", 1.0),
+            max_zoom=virtual_ptz_cfg.get("max_zoom", 2.0)
+        )
 
-        # pipeline = PTZPipeline(
-        #     camera=streamer,
-        #     tracker=tracker,
-        #     streamer=streamer,
-        #     display=radar,
-        #     joystick=joystick,
-        #     sensors=sensors,
-        #     config=settings,
-        # )
     except Exception as e:
         print(f"Startup failed: {e}")
         raise
 
     try:
         print("System running. Press Ctrl+C to stop")
-        # Process tracker results (generator yields Results objects)
+        
+        # Process tracker results
         for result in results:
-            result.show()
+            crop = virtual_ptz.get_crop_from_yolo_result(result)
+            print(crop)
+
     except KeyboardInterrupt:
         print("\nStopping services...")
+
     finally:
         if streamer is not None:
             streamer.stop()

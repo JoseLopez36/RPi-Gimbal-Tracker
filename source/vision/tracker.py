@@ -45,7 +45,8 @@ class Tracker:
             self.source,
             conf=self.conf_threshold,
             classes=[0],
-            stream=True
+            stream=True,
+            persist=True
         )
         
         return results
