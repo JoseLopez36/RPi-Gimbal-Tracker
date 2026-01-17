@@ -1,5 +1,6 @@
 import json
 import sys
+import time
 from pathlib import Path
 
 from vision.streamer import Streamer
@@ -70,6 +71,9 @@ def main():
 
     try:
         print("System running. Press Ctrl+C to stop")
+        # Keep main thread alive
+        while True:
+            time.sleep(1)
     except KeyboardInterrupt:
         print("\nStopping services...")
     finally:
