@@ -88,7 +88,7 @@ network to the Raspberry Pi on port `10001`.
 Example with `ffplay`:
 
 ```bash
-ffplay -fflags nobuffer -flags low_delay -probesize 32 -analyzeduration 0 tcp://<RPi_IP_ADDRESS>:10001
+ffplay -f h264 -fflags nobuffer -flags low_delay -probesize 50000 -analyzeduration 500000 tcp://raspberrypi.local:10001
 ```
 
 ### Controls (Sense HAT Joystick)

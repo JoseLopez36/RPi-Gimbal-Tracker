@@ -10,7 +10,7 @@ from vision.tracker import Tracker
 # from hardware import sensors
 
 def load_settings():
-    root = Path(__file__).resolve().parents[2]
+    root = Path(__file__).resolve().parents[1]
     settings_path = root / "config" / "settings.json"
     try:
         raw = settings_path.read_text().strip()

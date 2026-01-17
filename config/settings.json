@@ -1,6 +1,6 @@
 {
   "stream": {
-    "port": 8000,
+    "port": 10001,
     "width": 1920,
     "height": 1080,
     "bitrate": 1000000

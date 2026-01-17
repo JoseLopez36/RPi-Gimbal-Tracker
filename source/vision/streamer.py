@@ -5,6 +5,7 @@ Picamera2 streamer that sends H.264 over TCP to a connected client.
 Based on https://github.com/raspberrypi/picamera2/blob/main/examples/capture_stream.py
 """
 
+import time
 import socket
 
 from picamera2 import Picamera2
@@ -54,6 +55,7 @@ class Streamer:
 
         self.picam2.start_encoder(self.encoder)
         self.picam2.start()
+        time.sleep(20)
 
     def stop(self):
         if self.picam2 is not None:
