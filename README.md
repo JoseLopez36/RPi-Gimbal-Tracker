@@ -12,7 +12,7 @@ This project implements a smart surveillance system on a Raspberry Pi 4. It uses
 * **Multi-Target Tracking:** Detects multiple humans simultaneously using YOLO.
 * **Visual Radar (Sense HAT):** Maps the relative position of detected targets onto the 8x8 LED Matrix (Red pixel = Active Target, White pixels = Other targets, Black pixels = Background).
 * **Hardware Control:** Use the Sense HAT Joystick to cycle through detected people to change the PTZ focus target.
-* **Low-Latency Streaming:** Outputs the processed, stabilized video stream via GStreamer (RTSP/UDP).
+* **Low-Latency Streaming:** Outputs the processed, stabilized video stream over TCP (H.264).
 
 ## 🛠️ Hardware & Requirements
 
@@ -23,6 +23,7 @@ This project implements a smart surveillance system on a Raspberry Pi 4. It uses
 * **Sensor:** Raspberry Pi Camera Module v2.
   * [Product Page](https://www.raspberrypi.com/products/camera-module-v2/)
   * [Documentation](https://www.raspberrypi.com/documentation/accessories/camera.html)
+  * [Examples](https://github.com/raspberrypi/picamera2/tree/main/examples)
 * **I/O:** Raspberry Pi Sense HAT.
   * [Product Page](https://www.raspberrypi.com/products/sense-hat/)
   * [Documentation](https://www.raspberrypi.com/documentation/accessories/sense-hat.html)
@@ -57,12 +58,12 @@ cd RPi-Virtual-PTZ
 2. **Install system dependencies:**
 ```bash
 sudo apt update
-sudo apt install sense-hat
+sudo apt install python3-picamera2
 ```
 
 3. **Install Python requirements:**
 ```bash
-pip install -r requirements.txt
+pip install ultralytics[export]
 ```
 
 ## ⚙️ Configuration
@@ -79,15 +80,16 @@ Run the main application on the Raspberry Pi:
 python3 source/main.py
 ```
 
-### Web Viewer
+### Stream Client
 
-Access the video stream from any device with a web browser by navigating to:
+The stream is served as raw H.264 over TCP. Connect from a client on the same
+network to the Raspberry Pi on port `10001`.
 
+Example with `ffplay`:
+
+```bash
+ffplay -fflags nobuffer -flags low_delay -probesize 32 -analyzeduration 0 tcp://<RPi_IP_ADDRESS>:10001
 ```
-http://<RPi_IP_ADDRESS>:8000
-```
-
-For example: `http://192.168.1.112:8000`
 
 ### Controls (Sense HAT Joystick)
 

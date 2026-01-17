@@ -22,12 +22,12 @@ def load_settings():
         return {}
 
 def main():
-    print("RPi Virtual PTZ Started")
+    print("RPi Virtual PTZ started")
 
     settings = load_settings()
 
     streamer = None
-    tracker = None
+    # tracker = None
     # radar = None
     # joystick = None
     # pipeline = None
@@ -36,21 +36,21 @@ def main():
         print("Initializing stream...")
         stream_cfg = settings.get("stream", {})
         streamer = Streamer(
+            port=stream_cfg.get("port", 10001),
             width=stream_cfg.get("width", 1920),
             height=stream_cfg.get("height", 1080),
-            framerate=stream_cfg.get("framerate", 30),
-            port=stream_cfg.get("port", 8000)
+            bitrate=stream_cfg.get("bitrate", 1000000)
         )
         streamer.start()
 
-        print("Initializing tracker...")
-        tracker_cfg = settings.get("tracker", {})
-        tracker = Tracker(
-            model_path=tracker_cfg.get("model_path", "models/yolo11n.pt"),
-            source=streamer.get_local_stream_url(),
-            conf_threshold=tracker_cfg.get("conf_threshold", 0.5)
-        )
-        tracker_results = tracker.start()
+        # print("Initializing tracker...")
+        # tracker_cfg = settings.get("tracker", {})
+        # tracker = Tracker(
+        #     model_path=tracker_cfg.get("model_path", "models/yolo11n.pt"),
+        #     source=streamer.get_local_stream_url(),
+        #     conf_threshold=tracker_cfg.get("conf_threshold", 0.5)
+        # )
+        # tracker_results = tracker.start()
 
         # sense_cfg = settings.get("sense_hat", {})
         # radar = VisualRadar(enabled=sense_cfg.get("enabled", True))
