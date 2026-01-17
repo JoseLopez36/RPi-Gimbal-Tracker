@@ -23,6 +23,7 @@ def main():
         nonlocal ptz_state
         if topic == config['mqtt']['topics']['ptz']:
             ptz_state = payload
+            print(ptz_state)
 
     mqtt.set_callback(on_mqtt_message)
 
