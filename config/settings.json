@@ -1,19 +1,30 @@
 {
-  "streamer": {
-    "port": 10001,
-    "width": 1280,
-    "height": 720,
-    "bitrate": 1000000
-  },
-  "tracker": {
-    "model_path": "models/yolo11n_ncnn_model",
-    "conf_threshold": 0.5,
-    "imgsz": 320
-  },
-  "virtual_ptz": {
-    "width": 640,
-    "height": 360,
-    "min_zoom": 1.0,
-    "max_zoom": 2.0
-  }
+    "mqtt": {
+        "broker": "localhost",
+        "port": 1883,
+        "topics": {
+            "inference": "rpi-ptz/inference",
+            "ptz": "rpi-ptz/ptz"
+        }
+    },
+    "video": {
+        "host": "0.0.0.0",
+        "port": 10001,
+        "resolution": [1280, 720],
+        "framerate": 30
+    },
+    "camera": {
+        "rotation": 0,
+        "hflip": false,
+        "vflip": false
+    },
+    "ai": {
+        "model_path": "models/yolo11n.pt",
+        "conf_threshold": 0.5,
+        "input_size": 640
+    },
+    "ptz": {
+        "default_zoom": 1.0,
+        "animation_speed": 0.1
+    }
 }
