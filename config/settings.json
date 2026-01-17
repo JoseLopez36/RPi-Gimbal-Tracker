@@ -15,7 +15,7 @@
     "ai": {
         "model_path": "models/yolo11n.pt",
         "conf_threshold": 0.5,
-        "input_size": 640
+        "input_size": 1280
     },
     "ptz": {
         "default_zoom": 1.0,
