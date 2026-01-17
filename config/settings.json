@@ -13,12 +13,8 @@
         "resolution": [1280, 720]
     },
     "ai": {
-        "model_path": "models/yolo11n.pt",
-        "conf_threshold": 0.01,
+        "model_path": "models/yolo26m.pt",
+        "conf_threshold": 0.7,
         "input_size": 1280
-    },
-    "ptz": {
-        "default_zoom": 1.0,
-        "animation_speed": 0.1
     }
 }
