@@ -23,9 +23,11 @@ def main():
         if topic == config['mqtt']['topics']['inference']:
             # Process inference results
             detections = payload.get('detections', [])
-            ptz_cmd = ptz.update(detections)
-            sense_hat.update_display(detections, ptz.target_id)
-            mqtt.publish_ptz(ptz_cmd)
+            if detections:
+                ptz_cmd = ptz.update(detections)
+                if ptz_cmd:
+                    sense_hat.update_display(detections, ptz_cmd['target_id'])
+                    mqtt.publish_ptz(ptz_cmd)
 
     mqtt.set_callback(on_mqtt_message)
 
